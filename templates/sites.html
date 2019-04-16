@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Historical Sites of {{city.name}}{% endblock %}
 {% block content %}
+<div>
+  <h1>Historical Sites of {{city.name}}</h1>
+  {% for site in sites %}
   <div>
-    <h1>Historical Sites of {{city.name}}</h1>
-    {% for site in sites %}
-    <div>
-      <a href="{{url_for('show_historical_site', city_id = city.id, site_id = site.id)}}">
-        <div>
-            <h2>{{site.name}}</h2>
-        </div>
-      </a>
-      <img src="{{site.image}}" alt="Image for {{site.name}}">
-    </div>
-    {% endfor %}
+    <a href="{{url_for('show_historical_site', city_id = city.id, site_id = site.id)}}">
+      <div>
+        <h2>{{site.name}}</h2>
+      </div>
+    </a>
+    <img src="{{site.image}}" alt="Image for {{site.name}}">
   </div>
+  {% endfor %}
+</div>
 {% endblock %}
