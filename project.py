@@ -34,7 +34,8 @@ def show_sites(city_id):
 # Show a historical site
 @app.route('/<int:city_id>/<int:site_id>')
 def show_historical_site(city_id, site_id):
-    return "Historical site {} in city {}".format(site_id, city_id)
+    site = session.query(Site).filter_by(id=site_id, city_id=city_id).one()
+    return render_template('singlesite.html', site=site)
 
 
 # Add a new city
