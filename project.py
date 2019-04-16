@@ -49,6 +49,9 @@ def new_city():
 # Edit a city
 @app.route('/<int:city_id>/edit', methods=['GET', 'POST'])
 def edit_city(city_id):
+    city = session.query(City).filter_by(id=city_id).one()
+    if request.method == 'GET':
+        return render_template('editcity.html', city=city)
     return "Edit the city {}.".format(city_id)
 
 
