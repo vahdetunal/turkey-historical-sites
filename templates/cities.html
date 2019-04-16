@@ -5,9 +5,11 @@
     <h1>Historical Sites by City</h1>
     {% for city in cities %}
     <div>
-      <div>
-          <h2>{{city.name}}</h2>
-      </div>
+      <a href="{{url_for('show_sites', city_id = city.id)}}">
+        <div>
+            <h2>{{city.name}}</h2>
+        </div>
+      </a>
       <img src={{"city.image"}} alt="Image for {{city.name}}">
     </div>
     {% endfor %}
