@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Edit {{city.name}}{% endblock %}
+{% block content %}
+<div>
+  <h1>Edit {{city.name}}</h1>
+  <form method="POST">
+    <p>
+      <label for="name">Name</label>
+      <input type="text" maxlength="50" name="name" id="name" placeholder="{{city.name}}">
+    </p>
+    <p>
+      <label for="image_uri">Image URI</label>
+      <input type="text" maxlength="250" name="image_uri" id="image_uri" placeholder="{{city.image}}">
+    </p>
+    <button type="submit">Edit</button>
+  </form>
+</div>
+{% endblock %}
