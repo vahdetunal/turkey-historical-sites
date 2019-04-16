@@ -41,6 +41,8 @@ def show_historical_site(city_id, site_id):
 # Add a new city
 @app.route('/new', methods=['GET', 'POST'])
 def new_city():
+    if request.method == 'GET':
+        return render_template('newcity.html')
     return "Add a new city"
 
 
