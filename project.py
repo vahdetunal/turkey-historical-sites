@@ -1,14 +1,26 @@
 #!/usr/bin/env python3
 from flask import Flask, render_template, url_for, request, redirect, flash
 
+from sqlalchemy import create_engine, asc
+from sqlalchemy.orm import sessionmaker
+from database_setup import Base, City, Site
 
 app = Flask(__name__)
+
+# Create the engine for DB connection
+engine = create_engine('sqlite:///historicalsites.db')
+
+# Create a DB session
+Session = sessionmaker(bind=engine)
+session = Session()
 
 
 # Show all cities
 @app.route('/')
 def show_cities():
-    return 'Cities'
+    # Get cities from the database
+    cities = session.query(City).order_by(asc(City.name))
+    return render_template('cities.html', cities=cities)
 
 
 # Show historical sites within a city
