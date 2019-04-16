@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Add a New Site{% endblock %}
+{% block content %}
+<div>
+  <h1>Add a Historical Site in {{city.name}}</h1>
+  <form method="POST">
+    <p>
+      <label for="name">Name</label>
+      <input type="text" maxlength="50" name="name" id="name" placeholder="Name of the site">
+    </p>
+    <p>
+        <label for="description">Description</label>
+        <textarea name="description" id="description" maxlength="250" rows="5" placeholder="Description of the site"></textarea>
+    </p>
+    <p>
+        <label for="civilization">Civilization</label>
+        <input type="text" name="civilization" id="civilization" maxlength="50" placeholder="Building civilization">
+    </p>
+    <p>
+      <label for="image_uri">Image URI</label>
+      <input type="text" maxlength="250" name="image_uri" id="image_uri" placeholder="Image for the site">
+    </p>
+    <button type="submit">Submit</button>
+  </form>
+</div>
+{% endblock %}
