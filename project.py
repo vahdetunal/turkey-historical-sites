@@ -26,7 +26,9 @@ def show_cities():
 # Show historical sites within a city
 @app.route('/<int:city_id>')
 def show_sites(city_id):
-    return "Historical sites in {}".format(city_id)
+    city = session.query(City).filter_by(id=city_id).one()
+    sites = session.query(Site).filter_by(city_id=city_id)
+    return render_template('sites.html', city=city, sites=sites)
 
 
 # Show a historical site
