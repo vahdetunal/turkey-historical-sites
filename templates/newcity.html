@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Add a New City{% endblock %}
+{% block content %}
+<div>
+  <h1>Add a New City</h1>
+  <form action="" method="POST">
+    <p>
+      <label for="name">Name</label>
+      <input type="text" maxlength="50" name="name" id="name" placeholder="Name of the city">
+    </p>
+    <p>
+      <label for="image_uri">Image URI</label>
+      <input type="text" maxlength="250" name="image_uri" id="image_uri" placeholder="Image for the city">
+    </p>
+    <button type="submit">Submit</button>
+  </form>
+</div>
+{% endblock %}
