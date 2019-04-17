@@ -6,6 +6,18 @@
       <h1>Historical Sites by City</h1>
       <a href="{{url_for('new_city')}}">Add a City</a>
     </div>
+    <div class='flash'>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+    </div>
+</div>
     <ul>
       {% for city in cities %}
       <li>
