@@ -73,6 +73,9 @@ def new_historical_site(city_id):
 # Edit a historical site
 @app.route('/<int:city_id>/<int:site_id>/edit', methods=['GET', 'POST'])
 def edit_historical_site(city_id, site_id):
+    site = session.query(Site).filter_by(id=site_id, city_id=city_id).one()
+    if request.method == 'GET':
+        return render_template('editsite.html', site=site)
     return "Edit the historical site {} in city {}.".format(site_id, city_id)
 
 
