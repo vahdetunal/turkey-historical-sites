@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block scripts %}
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script src="//apis.google.com/js/platform.js?onload=start"> </script>
+{% endblock %}
+{% block metaname %}
+  <meta name="google-signin-client_id" content="654793246519-9kk5709jdtavc0nq92na7u8plfh19h3n.apps.googleusercontent.com">
+{% endblock %}
+{% block content %}
+<div id="signinButton">
+    <div class="g-signin2" data-onsuccess="onSignIn" data-scope="openid email"
+        data-clientid="654793246519-9kk5709jdtavc0nq92na7u8plfh19h3n.apps.googleusercontent.com"
+        data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin"
+        data-callback="signInCallback" data-approvalprompt="force">
+    </div>
+</div>
+{% endblock %}
