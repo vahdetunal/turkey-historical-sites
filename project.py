@@ -47,6 +47,7 @@ def new_city():
                     user_id=1)
         session.add(city)
         session.commit()
+        flash('New city {} successfully added!'.format(city.name))
         return redirect(url_for('show_cities'))
     else:
         return render_template('newcity.html')
@@ -64,6 +65,7 @@ def edit_city(city_id):
         city.user_id = 1
         session.add(city)
         session.commit()
+        flash('City {} edited!'.format(city.name))
         return redirect(url_for('show_cities'))
     else:
         return render_template('editcity.html', city=city)
@@ -85,6 +87,7 @@ def delete_city(city_id):
             session.rollback()
         session.delete(city)
         session.commit()
+        flash('City {} deleted!'.format(city.name))
         return redirect(url_for('show_cities'))
     else:
         return render_template('deletecity.html', city=city)
@@ -103,6 +106,7 @@ def new_historical_site(city_id):
                     user_id=1)
         session.add(site)
         session.commit()
+        flash('New historical site {} added!'.format(site.name))
         return redirect(url_for('show_sites', city_id=city_id))
     else:
         return render_template('newsite.html', city=city)
@@ -123,6 +127,7 @@ def edit_historical_site(city_id, site_id):
             site.image = request.form['image_uri']
         session.add(site)
         session.commit()
+        flash('Historical site {} edited!'.format(site.name))
         return redirect(url_for('show_historical_site',
                                 city_id=city_id, site_id=site_id))
     else:
@@ -136,11 +141,13 @@ def delete_historical_site(city_id, site_id):
     if request.method == 'POST':
         session.delete(site)
         session.commit()
+        flash('Historical site {} deleted!'.format(site.name))
         return redirect(url_for('show_sites', city_id=city_id))
     else:
         return render_template('deletesite.html', site=site)
 
 
 if __name__ == '__main__':
+    app.secret_key = 'some_key'
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
