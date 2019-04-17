@@ -94,9 +94,18 @@ def delete_city(city_id):
 @app.route('/<int:city_id>/new', methods=['GET', 'POST'])
 def new_historical_site(city_id):
     city = session.query(City).filter_by(id=city_id).one()
-    if request.method == 'GET':
+    if request.method == 'POST':
+        site = Site(name=request.form['name'],
+                    description=request.form['description'],
+                    civilization=request.form['civilization'],
+                    image=request.form['image_uri'],
+                    city_id=city_id,
+                    user_id=1)
+        session.add(site)
+        session.commit()
+        return redirect(url_for('show_sites', city_id=city_id))
+    else:
         return render_template('newsite.html', city=city)
-    return "Add a new historlcal site in city {}.".format(city_id)
 
 
 # Edit a historical site
