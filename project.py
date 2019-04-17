@@ -1,11 +1,27 @@
 #!/usr/bin/env python3
 from flask import Flask, render_template, url_for, request, redirect, flash
+from flask import session as login_session
 
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, City, Site
 
+import random, string
+
 app = Flask(__name__)
+
+
+# Create and store a state token to prevent cross site request forgery attacks.
+def generate_state_token():
+    characters = string.ascii_uppercase + string.digits
+    state = ''.join(random.choice(characters) for i in range(32))
+    return state
+
+@app.route('/login')
+def show_login():
+    state = generate_state_token()
+    login_session['state'] = state
+    return "Current login session state is {}".format(login_session['state'])
 
 # Create the engine for DB connection
 engine = create_engine('sqlite:///historicalsites.db')
