@@ -58,6 +58,9 @@ def edit_city(city_id):
 # Delete a city
 @app.route('/<int:city_id>/delete', methods=['GET', 'POST'])
 def delete_city(city_id):
+    city = session.query(City).filter_by(id=city_id).one()
+    if request.method == 'GET':
+        return render_template('deletecity.html', city=city)
     return "Delete the city {}.".format(city_id)
 
 
