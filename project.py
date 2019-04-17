@@ -133,9 +133,12 @@ def edit_historical_site(city_id, site_id):
 @app.route('/<int:city_id>/<int:site_id>/delete', methods=['GET', 'POST'])
 def delete_historical_site(city_id, site_id):
     site = session.query(Site).filter_by(id=site_id, city_id=city_id).one()
-    if request.method == 'GET':
+    if request.method == 'POST':
+        session.delete(site)
+        session.commit()
+        return redirect(url_for('show_sites', city_id=city_id))
+    else:
         return render_template('deletesite.html', site=site)
-    return "Delete the historical site {} in city {}.".format(site_id, city_id)
 
 
 if __name__ == '__main__':
