@@ -56,18 +56,38 @@ def new_city():
 @app.route('/<int:city_id>/edit', methods=['GET', 'POST'])
 def edit_city(city_id):
     city = session.query(City).filter_by(id=city_id).one()
-    if request.method == 'GET':
+    if request.method == 'POST':
+        if request.form['name']:
+            city.name = request.form['name']
+        if request.form['image_uri']:
+            city.image = request.form['image_uri']
+        city.user_id = 1
+        session.add(city)
+        session.commit()
+        return redirect(url_for('show_cities'))
+    else:
         return render_template('editcity.html', city=city)
-    return "Edit the city {}.".format(city_id)
 
 
 # Delete a city
 @app.route('/<int:city_id>/delete', methods=['GET', 'POST'])
 def delete_city(city_id):
+    '''
+    Deletes a city and all site entries related.
+    '''
     city = session.query(City).filter_by(id=city_id).one()
-    if request.method == 'GET':
+    if request.method == 'POST':
+        # A city may not have any site entries. Those cases need to be
+        # handled to prevent errors.
+        try:
+            session.query(Site).filter_by(city_id=city_id).delete()
+        except:
+            session.rollback()
+        session.delete(city)
+        session.commit()
+        return redirect(url_for('show_cities'))
+    else:
         return render_template('deletecity.html', city=city)
-    return "Delete the city {}.".format(city_id)
 
 
 # Add a historical site
