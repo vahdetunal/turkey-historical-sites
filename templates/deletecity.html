@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Delete {{city.name}}{% endblock %}
+{% block content %}
+<div>
+  <h1>Delete {{city.name}}</h1>
+  <p>
+      Do you really want to delete {{city.name}}? This will remove the city and
+      all of the historical sites within.
+  </p>
+  <form method="POST">
+    <button type="submit">Delete</button>
+  </form>
+</div>
+{% endblock %}
