@@ -21,7 +21,7 @@ def generate_state_token():
 def show_login():
     state = generate_state_token()
     login_session['state'] = state
-    return render_template('login.html')
+    return render_template('login.html', STATE=state)
 
 # Create the engine for DB connection
 engine = create_engine('sqlite:///historicalsites.db')
