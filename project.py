@@ -234,6 +234,7 @@ def show_historical_site(city_id, site_id):
 # Add a new city
 @app.route('/new', methods=['GET', 'POST'])
 def new_city():
+    # Redirect to login page if the user is not logged in.
     if 'username' not in login_session:
         flash('You need to login to add a city.')
         return redirect('/login')
@@ -295,6 +296,7 @@ def delete_city(city_id):
 # Add a historical site
 @app.route('/<int:city_id>/new', methods=['GET', 'POST'])
 def new_historical_site(city_id):
+    # Redirect to login page if the user is not logged in.
     if 'username' not in login_session:
         flash('You need to login to add a site.')
         return redirect('/login')
