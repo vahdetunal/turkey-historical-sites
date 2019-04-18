@@ -145,6 +145,8 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    # Check if the user is already registered
+
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -227,7 +229,7 @@ def new_city():
         flash('You need to login to add a city.')
         return redirect('/login')
 
-    user_id = get_user_id(loggin_session['email'])
+    user_id = get_user_id(login_session['email'])
         
     if request.method == 'POST':
         city = City(name=request.form['name'],
@@ -289,7 +291,7 @@ def new_historical_site(city_id):
         return redirect('/login')
 
     city = session.query(City).filter_by(id=city_id).one()
-    user_id = get_user_id(loggin_session['email'])
+    user_id = get_user_id(login_session['email'])
 
     if request.method == 'POST':
         site = Site(name=request.form['name'],
