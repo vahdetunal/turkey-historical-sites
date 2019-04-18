@@ -2,6 +2,7 @@
 from flask import Flask, render_template, url_for, request, redirect, flash
 from flask import session as login_session
 from flask import make_response
+from flask_sqlalchemy import SQLAlchemy
 
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
@@ -17,17 +18,18 @@ import random, string
 
 
 app = Flask(__name__)
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///historicalsites.db'
+db = SQLAlchemy(app)
 
 CLIENT_ID = json.loads(
             open('client_secrets.json', 'r').read())['web']['client_id']
 
 # Create the engine for DB connection
-engine = create_engine('sqlite:///historicalsites.db')
+# engine = create_engine('sqlite:///historicalsites.db')
 
 # Create a DB session
-Session = sessionmaker(bind=engine)
-session = Session()
+
+session = db.session()
 
 # Create and store a state token to prevent cross site request forgery attacks.
 def generate_state_token():
