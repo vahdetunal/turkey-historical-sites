@@ -226,11 +226,13 @@ def new_city():
     if 'username' not in login_session:
         flash('You need to login to add a city.')
         return redirect('/login')
+
+    user_id = get_user_id(loggin_session['email'])
         
     if request.method == 'POST':
         city = City(name=request.form['name'],
                     image=request.form['image_uri'],
-                    user_id=1)
+                    user_id=user_id)
         session.add(city)
         session.commit()
         flash('New city {} successfully added!'.format(city.name))
@@ -285,15 +287,17 @@ def new_historical_site(city_id):
     if 'username' not in login_session:
         flash('You need to login to add a site.')
         return redirect('/login')
-        
+
     city = session.query(City).filter_by(id=city_id).one()
+    user_id = get_user_id(loggin_session['email'])
+
     if request.method == 'POST':
         site = Site(name=request.form['name'],
                     description=request.form['description'],
                     civilization=request.form['civilization'],
                     image=request.form['image_uri'],
                     city_id=city_id,
-                    user_id=1)
+                    user_id=user_id)
         session.add(site)
         session.commit()
         flash('New historical site {} added!'.format(site.name))
