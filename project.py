@@ -31,7 +31,7 @@ session = db.session()
 
 
 # Add a new user to database and return the users id
-def create_user():
+def create_user(login_session):
     new_user = User(name=login_session['username'],
                 email=login_session['email'],
                 picture=login_session['picture'])
@@ -146,6 +146,14 @@ def gconnect():
     login_session['email'] = data['email']
 
     # Check if the user is already registered
+    result = get_user_id(login_session['email'])
+
+    # Register if the user does not exit
+    if result is None:
+        user_id = create_user(login_session)
+        login_session['user_id'] = user_id
+    else:
+        login_session['user_id'] = result
 
     output = ''
     output += '<h1>Welcome, '
@@ -186,6 +194,7 @@ def gdisconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
+        del login_session['user_id']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
