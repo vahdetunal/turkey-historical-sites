@@ -153,7 +153,7 @@ def gdisconnect():
     # If token is successfuly revoked, delete users session
     if result['status'] == '200':
         del login_session['access_token']
-        del login_session['gplus_id']
+        del login_session['google_id']
         del login_session['username']
         del login_session['email']
         del login_session['picture']
@@ -172,7 +172,10 @@ def gdisconnect():
 def show_cities():
     # Get cities from the database
     cities = session.query(City).order_by(asc(City.name))
-    return render_template('cities.html', cities=cities)
+    username = login_session.get('username', '')
+    return render_template('cities.html',
+                            cities=cities,
+                            username=username)
 
 
 # Show historical sites within a city

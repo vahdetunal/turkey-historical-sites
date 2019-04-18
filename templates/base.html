@@ -9,7 +9,19 @@
   {% block metaname %}{% endblock %}
 </head>
 <body>
-  <div>Historical Sites of Turkey</div>
+  <div>
+    <div>Historical Sites of Turkey</div>
+    {% if username %}
+      <div>
+        {{username}}
+        <a href="{{url_for('gdisconnect')}}">Logout</a>
+      </div>
+    {% else %}
+      <div>
+        <a href="{{url_for('show_login')}}">Login</a>
+      </div>
+    {% endif %}
+  </div>
   {% block content %}{% endblock %}
 </body>
 </html>
