@@ -223,6 +223,10 @@ def show_historical_site(city_id, site_id):
 # Add a new city
 @app.route('/new', methods=['GET', 'POST'])
 def new_city():
+    if 'username' not in login_session:
+        flash('You need to login to add a city.')
+        return redirect('/login')
+        
     if request.method == 'POST':
         city = City(name=request.form['name'],
                     image=request.form['image_uri'],
@@ -278,6 +282,10 @@ def delete_city(city_id):
 # Add a historical site
 @app.route('/<int:city_id>/new', methods=['GET', 'POST'])
 def new_historical_site(city_id):
+    if 'username' not in login_session:
+        flash('You need to login to add a site.')
+        return redirect('/login')
+        
     city = session.query(City).filter_by(id=city_id).one()
     if request.method == 'POST':
         site = Site(name=request.form['name'],
