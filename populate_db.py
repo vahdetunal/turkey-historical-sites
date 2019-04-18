@@ -10,7 +10,7 @@ session = Session()
 
 
 # Create a dummy user
-User1 = User(name="Vahdet Unal", email="vahdetunal58gmail.com",
+User1 = User(name="Vahdet Unal", email="vahdet2unal@hotmail.com",
              picture=("https://pbs.twimg.com/profile_images/2671170543" +
                       "/18debd694829ed78203a5a36dd364160_400x400.png"))
 session.add(User1)
