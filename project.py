@@ -4,9 +4,7 @@ from flask import session as login_session
 from flask import make_response
 from flask_sqlalchemy import SQLAlchemy
 
-from sqlalchemy import create_engine, asc
-from sqlalchemy.orm import sessionmaker
-from database_setup import Base, City, Site
+from database_setup import Base, City, Site, User
 
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -30,6 +28,33 @@ CLIENT_ID = json.loads(
 # Create a DB session
 
 session = db.session()
+
+
+# Add a new user to database and return the users id
+def create_user():
+    new_user = User(name=login_session['username'],
+                email=login_session['email'],
+                picture=login_session['picture'])
+    db.add(new_user)
+    db.commit()
+    user = session.query(User).filter_by(email=login_session['email'])
+    return user.id
+
+
+# Returns a user given the user id
+def get_user_info(id):
+    user = session.query(User).filter_by(id=id).one()
+    return user
+
+
+def get_user_id(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
 
 # Create and store a state token to prevent cross site request forgery attacks.
 def generate_state_token():
@@ -173,7 +198,7 @@ def gdisconnect():
 @app.route('/')
 def show_cities():
     # Get cities from the database
-    cities = session.query(City).order_by(asc(City.name))
+    cities = session.query(City).order_by(City.name)
     username = login_session.get('username', '')
     return render_template('cities.html',
                             cities=cities,
