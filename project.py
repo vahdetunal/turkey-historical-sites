@@ -26,7 +26,6 @@ CLIENT_ID = json.loads(
 # engine = create_engine('sqlite:///historicalsites.db')
 
 # Create a DB session
-
 session = db.session()
 
 
@@ -147,7 +146,7 @@ def gconnect():
 
     # Check if the user is already registered
     result = get_user_id(login_session['email'])
-
+    print(result)
     # Register if the user does not exit
     if result is None:
         user_id = create_user(login_session)
@@ -260,7 +259,7 @@ def edit_city(city_id):
 
     # Redirect to login page if user is not logged in.
     if 'username' not in login_session:
-        flash('You need to login to delete a city.')
+        flash('You need to login to edit a city.')
         return redirect('/login')
 
     # Redirect to main page if the user is unauthorized.
@@ -297,7 +296,7 @@ def delete_city(city_id):
 
     # Redirect to main page if the user is unauthorized.
     if login_session['user_id'] != city.user_id:
-        flash('You do not have authorization to edit {}'.format(city.name))
+        flash('You do not have authorization to delete {}'.format(city.name))
         return redirect(url_for('show_cities'))
 
     if request.method == 'POST':
