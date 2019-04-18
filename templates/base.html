@@ -11,17 +11,6 @@
 <body>
   <div>
     <div>Historical Sites of Turkey</div>
-    <div class='flash'>
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-      <ul>
-        {% for message in messages %}
-        <li> <strong> {{ message }} </strong> </li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-      {% endwith %}
-    </div>
     {% if username %}
       <div>
         {{username}}
@@ -32,6 +21,17 @@
         <a href="{{url_for('show_login')}}">Login</a>
       </div>
     {% endif %}
+  </div>
+  <div class='flash'>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li> <strong> {{ message }} </strong> </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
   </div>
   {% block content %}{% endblock %}
 </body>
