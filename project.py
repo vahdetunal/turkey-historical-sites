@@ -35,9 +35,9 @@ def create_user(login_session):
     new_user = User(name=login_session['username'],
                 email=login_session['email'],
                 picture=login_session['picture'])
-    db.add(new_user)
-    db.commit()
-    user = session.query(User).filter_by(email=login_session['email'])
+    session.add(new_user)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
     return user.id
 
 
@@ -379,7 +379,7 @@ def edit_historical_site(city_id, site_id):
 @app.route('/<int:city_id>/<int:site_id>/delete', methods=['GET', 'POST'])
 def delete_historical_site(city_id, site_id):
     site = session.query(Site).filter_by(id=site_id, city_id=city_id).one()
-    
+
     # Redirect to main page if the user is not logged in.
     if 'username' not in login_session:
         flash('You need to login to delete a site.')
