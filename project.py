@@ -257,6 +257,17 @@ def new_city():
 @app.route('/<int:city_id>/edit', methods=['GET', 'POST'])
 def edit_city(city_id):
     city = session.query(City).filter_by(id=city_id).one()
+
+    # Redirect to login page if user is not logged in.
+    if 'username' not in login_session:
+        flash('You need to login to delete a city.')
+        return redirect('/login')
+
+    # Redirect to main page if the user is unauthorized.
+    if login_session['user_id'] != city.user_id:
+        flash('You do not have authorization to edit {}'.format(city.name))
+        return redirect(url_for('show_cities'))
+
     if request.method == 'POST':
         if request.form['name']:
             city.name = request.form['name']
@@ -278,6 +289,17 @@ def delete_city(city_id):
     Deletes a city and all site entries related.
     '''
     city = session.query(City).filter_by(id=city_id).one()
+
+    # Redirect to login page if user is not logged in.
+    if 'username' not in login_session:
+        flash('You need to login to delete a city.')
+        return redirect('/login')
+
+    # Redirect to main page if the user is unauthorized.
+    if login_session['user_id'] != city.user_id:
+        flash('You do not have authorization to edit {}'.format(city.name))
+        return redirect(url_for('show_cities'))
+
     if request.method == 'POST':
         # A city may not have any site entries. Those cases need to be
         # handled to prevent errors.
@@ -296,12 +318,13 @@ def delete_city(city_id):
 # Add a historical site
 @app.route('/<int:city_id>/new', methods=['GET', 'POST'])
 def new_historical_site(city_id):
+    city = session.query(City).filter_by(id=city_id).one()
+
     # Redirect to login page if the user is not logged in.
     if 'username' not in login_session:
         flash('You need to login to add a site.')
         return redirect('/login')
 
-    city = session.query(City).filter_by(id=city_id).one()
     user_id = get_user_id(login_session['email'])
 
     if request.method == 'POST':
@@ -323,6 +346,17 @@ def new_historical_site(city_id):
 @app.route('/<int:city_id>/<int:site_id>/edit', methods=['GET', 'POST'])
 def edit_historical_site(city_id, site_id):
     site = session.query(Site).filter_by(id=site_id, city_id=city_id).one()
+
+    # Redirect to main page if the user is not logged in.
+    if 'username' not in login_session:
+        flash('You need to login to edit a site.')
+        return redirect('/login')
+
+    # Redirect to sites page if the user is not authorized
+    if login_session['user_id'] != site.user_id:
+        flash('You do not have authorization to edit {}'.format(site.name))
+        return redirect(url_for('show_sites', city_id=city_id))
+
     if request.method == 'POST':
         if request.form['name']:
             site.name = request.form['name']
@@ -345,6 +379,17 @@ def edit_historical_site(city_id, site_id):
 @app.route('/<int:city_id>/<int:site_id>/delete', methods=['GET', 'POST'])
 def delete_historical_site(city_id, site_id):
     site = session.query(Site).filter_by(id=site_id, city_id=city_id).one()
+    
+    # Redirect to main page if the user is not logged in.
+    if 'username' not in login_session:
+        flash('You need to login to delete a site.')
+        return redirect('/login')
+
+    # Redirect to sites page if the user is not authorized
+    if login_session['user_id'] != site.user_id:
+        flash('You do not have authorization to delete {}'.format(site.name))
+        return redirect(url_for('show_sites', city_id=city_id))
+
     if request.method == 'POST':
         session.delete(site)
         session.commit()
