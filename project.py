@@ -17,6 +17,9 @@ import random, string
 
 app = Flask(__name__)
 
+# flask_sqlalchemy warns against the use of this. It is true by default.
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 # Create a DB session
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///historicalsites.db'
 db = SQLAlchemy(app)
