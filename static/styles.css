@@ -44,3 +44,36 @@ body {
     font-weight: 200;
     padding: 0.5rem 1rem;
 }
+
+.content-container {
+    margin: 5rem 15%;
+    border-style: solid;
+    border-color: #e30a17;
+}
+
+.page-title-container {
+    display: flex;
+    align-items: center;
+    background: #e30a17;
+    color: white;
+}
+
+.page-title {
+    margin-left: auto;
+    margin-right: auto;    
+}
+
+.title-link {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0.5rem 1rem;
+    color: white;
+    text-decoration: none;
+    border-style: solid;
+    border-width: 0.1rem;
+    margin-right: 1rem;
+}
+
+.title-link:hover {
+    background: #b60713;
+}

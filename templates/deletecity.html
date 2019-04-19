@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Delete {{city.name}}{% endblock %}
 {% block content %}
-<div>
-  <h1>Delete {{city.name}}</h1>
+<div class="content-container">
+  <div class="page-title-container">
+    <h1>Delete {{city.name}}</h1>
+  </div>
   <p>
       Do you really want to delete {{city.name}}? This will remove the city and
       all of the historical sites within.

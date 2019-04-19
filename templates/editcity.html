@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Edit {{city.name}}{% endblock %}
 {% block content %}
-<div>
-  <h1>Edit {{city.name}}</h1>
+<div class="content-container">
+  <div class="page-title-container">
+    <h1>Edit {{city.name}}</h1>
+  </div>
   <form method="POST">
     <p>
       <label for="name">Name</label>

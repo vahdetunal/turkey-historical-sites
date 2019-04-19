@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Historical Sites of Turkey{% endblock %}
 {% block content %}
-  <div>
-    <div>
-      <h1>Historical Sites by City</h1>
-      <a href="{{url_for('new_city')}}">Add a City</a>
+  <div class="content-container">
+    <div class="page-title-container">
+      <h1 class="page-title">Historical Sites by City</h1>
+      <a class="title-link" href="{{url_for('new_city')}}">Add a City</a>
     </div>
-</div>
     <ul>
       {% for city in cities %}
       <li>

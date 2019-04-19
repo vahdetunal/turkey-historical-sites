@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Add a New Site{% endblock %}
 {% block content %}
-<div>
-  <h1>Add a Historical Site in {{city.name}}</h1>
+<div class="content-container">
+  <div class="page-title-container">
+    <h1>Add a Historical Site in {{city.name}}</h1>
+  </div>
   <form method="POST">
     <p>
       <label for="name">Name</label>
