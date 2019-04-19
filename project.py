@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from flask import Flask, render_template, url_for, request, redirect, flash
+from flask import make_response, jsonify
 from flask import session as login_session
-from flask import make_response
 from flask_sqlalchemy import SQLAlchemy
 
 from database_setup import Base, City, Site, User
@@ -405,6 +405,27 @@ def delete_historical_site(city_id, site_id):
         return redirect(url_for('show_sites', city_id=city_id))
     else:
         return render_template('deletesite.html', site=site)
+
+
+# JSON api to get all cities
+@app.route('/cities/JSON')
+def cities_json():
+    cities = session.query(City).all()
+    return jsonify(cities=[city.serialize for city in cities])
+
+
+# JSON api to get all sites within a city
+@app.route('/<int:city_id>/JSON')
+def city_sites_json(city_id):
+    sites = session.query(Site).filter_by(city_id=city_id).all()
+    return jsonify(sites=[site.serialize for site in sites])
+
+
+# JSON api to get all sites
+@app.route('/sites/JSON')
+def sites_json():
+    sites = session.query(Site).all()
+    return jsonify(sites=[site.serialize for site in sites])
 
 
 if __name__ == '__main__':
