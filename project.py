@@ -408,6 +408,7 @@ def delete_historical_site(city_id, site_id):
 
 
 # JSON api to get all cities
+@app.route('/JSON')
 @app.route('/cities/JSON')
 def cities_json():
     cities = session.query(City).all()
@@ -426,6 +427,13 @@ def city_sites_json(city_id):
 def sites_json():
     sites = session.query(Site).all()
     return jsonify(sites=[site.serialize for site in sites])
+
+
+# JSON api to get a single site
+@app.route('/<int:city_id>/<int:site_id>/JSON')
+def single_site(city_id, site_id):
+    site = session.query(Site).filter_by(id=site_id, city_id=city_id).one()
+    return jsonify(site=site.serialize)
 
 
 if __name__ == '__main__':
