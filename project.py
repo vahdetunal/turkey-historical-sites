@@ -269,9 +269,10 @@ def new_city():
     user_id = get_user_id(login_session['email'])
 
     if request.method == 'POST':
-        city = City(name=request.form['name'],
-                    image=request.form['image_uri'],
-                    user_id=user_id)
+        city = validate_cnew_city(request.form, user_id)
+        if city is None:
+            flash('Name field is required!')
+            return redirect(url_for('show_cities'))
         session.add(city)
         session.commit()
         flash('New city {} successfully added!'.format(city.name))
@@ -296,10 +297,10 @@ def edit_city(city_id):
         return redirect(url_for('show_cities'))
 
     if request.method == 'POST':
-        if request.form['name']:
-            city.name = request.form['name']
-        if request.form['image_uri']:
-            city.image = request.form['image_uri']
+        city = validate_edit_city(city, request.form)
+        if city is None:
+            flash('Name field is required!')
+            return redirect(url_for('show_cities'))
         session.add(city)
         session.commit()
         flash('City {} edited!'.format(city.name))
@@ -423,6 +424,46 @@ def delete_historical_site(city_id, site_id):
         return redirect(url_for('show_sites', city_id=city_id))
     else:
         return render_template('deletesite.html', site=site)
+
+
+def validate_new_city(city_form, user_id):
+    '''Validates a city form, returns none if the form has no name field.
+    Returns a City object otherwise. If no image link is included, default
+    image is added.
+
+    Arguments:
+    city_form: A dictionary with fields name and picture
+    user_id: ID of the user making the request.
+    '''
+    city_form = city_form.to_dict()
+    if not city_form['name']:
+        return None
+    if not city_form['image_uri']:
+        city_form['image_uri'] = url_for('static', filename='no_image.png')
+    city = City(name=city_form['name'], image=city_form['image_uri'],
+                user_id=user_id)
+    return city
+
+
+def validate_edit_city(city, city_form):
+    '''Validates an edit city form returns, none if the form has no name field.
+    Returns a City object otherwise. If no image link is included, default
+    image is added.
+
+    Arguments:
+    city: The City object to be updated
+    city_form: A dictionary with fields name and picture
+    '''
+    # Since only authorized users can make a request to edit, no need to check
+    # for user ID here.
+    city_form = city_form.to_dict()
+    if not city_form['name']:
+        return None
+    if not city_form['image_uri']:
+        city_form['image_uri'] = url_for('static', filename='no_image.png')
+    city.name = city_form['name']
+    city.image = city_form['image_uri']
+    return city
 
 
 # JSON api to get all cities
