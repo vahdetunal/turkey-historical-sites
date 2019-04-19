@@ -16,17 +16,16 @@ import random, string
 
 
 app = Flask(__name__)
+
+# Create a DB session
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///historicalsites.db'
 db = SQLAlchemy(app)
+session = db.session()
 
+# Load json secrets for google oauth2
 CLIENT_ID = json.loads(
             open('client_secrets.json', 'r').read())['web']['client_id']
 
-# Create the engine for DB connection
-# engine = create_engine('sqlite:///historicalsites.db')
-
-# Create a DB session
-session = db.session()
 
 
 # Add a new user to database and return the users id
@@ -67,6 +66,8 @@ def generate_state_token():
     return state
 
 
+# Show login page, sends a state token to the user to prevent cross site
+# forgery attacks.
 @app.route('/login')
 def show_login():
     state = generate_state_token()
@@ -281,7 +282,6 @@ def edit_city(city_id):
             city.name = request.form['name']
         if request.form['image_uri']:
             city.image = request.form['image_uri']
-        city.user_id = 1
         session.add(city)
         session.commit()
         flash('City {} edited!'.format(city.name))
