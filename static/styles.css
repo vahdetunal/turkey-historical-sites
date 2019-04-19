@@ -137,3 +137,13 @@ body {
     border-top-style: solid;
     border-top-color: #e30a17;
 }
+
+.single-site-container {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.description-container {
+    flex-grow: 1;
+}
