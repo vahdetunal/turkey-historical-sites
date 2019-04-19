@@ -269,7 +269,7 @@ def new_city():
     user_id = get_user_id(login_session['email'])
 
     if request.method == 'POST':
-        city = validate_cnew_city(request.form, user_id)
+        city = validate_new_city(request.form, user_id)
         if city is None:
             flash('Name field is required!')
             return redirect(url_for('show_cities'))
@@ -298,9 +298,11 @@ def edit_city(city_id):
 
     if request.method == 'POST':
         city = validate_edit_city(city, request.form)
+
         if city is None:
             flash('Name field is required!')
             return redirect(url_for('show_cities'))
+
         session.add(city)
         session.commit()
         flash('City {} edited!'.format(city.name))
@@ -355,12 +357,12 @@ def new_historical_site(city_id):
     user_id = get_user_id(login_session['email'])
 
     if request.method == 'POST':
-        site = Site(name=request.form['name'],
-                    description=request.form['description'],
-                    civilization=request.form['civilization'],
-                    image=request.form['image_uri'],
-                    city_id=city_id,
-                    user_id=user_id)
+        site = validate_new_site(request.form, user_id, city_id)
+
+        if site is None:
+            flash('Name field is required!')
+            return redirect(url_for('show_sites', city_id=city_id))
+
         session.add(site)
         session.commit()
         flash('New historical site {} added!'.format(site.name))
@@ -385,14 +387,11 @@ def edit_historical_site(city_id, site_id):
         return redirect(url_for('show_sites', city_id=city_id))
 
     if request.method == 'POST':
-        if request.form['name']:
-            site.name = request.form['name']
-        if request.form['description']:
-            site.description = request.form['description']
-        if request.form['civilization']:
-            site.civilization = request.form['civilization']
-        if request.form['image_uri']:
-            site.image = request.form['image_uri']
+        site = validate_edit_site(site, request.form)
+        if site is None:
+            flash('Name field is required!')
+            return redirect(url_for('show_sites', city_id=city_id))
+
         session.add(site)
         session.commit()
         flash('Historical site {} edited!'.format(site.name))
@@ -432,7 +431,7 @@ def validate_new_city(city_form, user_id):
     image is added.
 
     Arguments:
-    city_form: A dictionary with fields name and picture
+    city_form: An immutable dictionary with fields name and picture
     user_id: ID of the user making the request.
     '''
     city_form = city_form.to_dict()
@@ -452,7 +451,7 @@ def validate_edit_city(city, city_form):
 
     Arguments:
     city: The City object to be updated
-    city_form: A dictionary with fields name and picture
+    city_form: An immutable dictionary with fields name and picture
     '''
     # Since only authorized users can make a request to edit, no need to check
     # for user ID here.
@@ -464,6 +463,69 @@ def validate_edit_city(city, city_form):
     city.name = city_form['name']
     city.image = city_form['image_uri']
     return city
+
+
+def validate_new_site(site_form, user_id, city_id):
+    '''Validates a site form, returns none if the form has no name field.
+    Returns a Site object otherwise. Other unprovided fields are filled by
+    default values.
+
+    Arguments:
+    site_form: An immutable dictionary with fields name and picture
+    user_id: ID of the user making the request.
+    city_id: ID of the city where the site is located.
+    '''
+    site_form = site_form.to_dict()
+
+    if not site_form['name']:
+        return None
+
+    site_form = site_form_defaults(site_form)
+
+    site = Site(name=site_form['name'], civilization=site_form['civilization'],
+                description=site_form['description'],
+                image=site_form['image_uri'], city_id=city_id, user_id=user_id)
+    return site
+
+
+def validate_edit_site(site, site_form):
+    '''Validates a site form, returns none if the form has no name field.
+    Returns a Site object otherwise. Other unprovided fields are filled by
+    default values.
+
+    Arguments:
+    site: The Site object to be updated
+    site_form: An immutable dictionary with fields name and picture
+    '''
+    site_form = site_form.to_dict()
+
+    if not site_form['name']:
+        return None
+
+    site_form = site_form_defaults(site_form)
+
+    site.name = site_form['name']
+    site.civilization = site_form['civilization']
+    site.description = site_form['description']
+    site.image = site_form['image_uri']
+    return site
+
+
+def site_form_defaults(site_form):
+    '''
+    This helper function fills site form fields with default values if they
+    are not provided.
+
+    Arguments:
+    site_form: A dictionary object obtained from site forms.
+    '''
+    if not site_form['civilization']:
+        site_form['civilization'] = 'Civilization was not provided by the user'
+    if not site_form['description']:
+        site_form['description'] = 'Description was not provided by the user'
+    if not site_form['image_uri']:
+        site_form['image_uri'] = url_for('static', filename='no_image.png')
+    return site_form
 
 
 # JSON api to get all cities
