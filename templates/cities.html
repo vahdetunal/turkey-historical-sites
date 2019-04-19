@@ -6,20 +6,20 @@
       <h1 class="page-title">Historical Sites by City</h1>
       <a class="title-link" href="{{url_for('new_city')}}">Add a City</a>
     </div>
-    <ul>
+    <ul class="navigation-container">
       {% for city in cities %}
       <li>
-        <div>
-          <a href="{{url_for('show_sites', city_id = city.id)}}">
-            <div>
-                <h2>{{city.name}}</h2>
+        <div class="navigation-item">
+          <div class="link-container">
+            <a class="item-link" href="{{url_for('show_sites', city_id = city.id)}}">
+                  <h2 class="item-title">{{city.name}}</h2>
+            </a>
+            <div class="menu-link-container">
+                <a class="menu-link" href="{{url_for('edit_city', city_id=city.id)}}">Edit</a>
+                <a class="menu-link" href="{{url_for('delete_city', city_id=city.id)}}">Delete</a>
             </div>
-          </a>
-          <img src="{{city.image}}" alt="Image for {{city.name}}">
-        </div>
-        <div>
-          <a href="{{url_for('edit_city', city_id=city.id)}}">Edit</a>
-          <a href="{{url_for('delete_city', city_id=city.id)}}">Delete</a>
+          </div>
+          <img class="item-image" src="{{city.image}}" alt="Image for {{city.name}}">
         </div>
       </li>
       {% endfor %}

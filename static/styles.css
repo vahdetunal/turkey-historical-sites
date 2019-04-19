@@ -77,3 +77,62 @@ body {
 .title-link:hover {
     background: #b60713;
 }
+
+.navigation-container {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navigation-item {
+    display: flex;
+    align-items: center;
+}
+
+.link-container {
+    display: flex;
+    flex-direction: column;
+    height: 20rem;
+    flex-grow: 1;
+}
+
+.item-image {
+    width: 20rem;
+    height: 20rem;
+    object-fit: cover;
+}
+
+.item-link {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    text-decoration: none;
+}
+
+.item-link:hover {
+    background: #22222225;
+}
+
+.menu-link-container {
+    display: flex;
+    justify-content: center;
+    padding: 0.2rem 0;
+}
+
+.menu-link {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0.5rem 1rem;
+    color: #e30a17;
+    text-decoration: none;
+    border-style: solid;
+    border-color: #e30a17;
+    border-width: 0.1rem;
+    margin-right: 1rem; 
+}
+
+.navigation-container > li {
+    border-top-style: solid;
+    border-top-color: #e30a17;
+}
