@@ -19,7 +19,14 @@
 {% block metaname %}
   <meta name="google-signin-client_id" content="654793246519-9kk5709jdtavc0nq92na7u8plfh19h3n.apps.googleusercontent.com">
 {% endblock %}
+
+
 {% block content %}
+<div class="content-container">
+  <div class="page-title-container">
+    <h1 class="page-title">Login</h1>
+  </div>
+
   <div id="signinButton">
     <div class="g-signin2">
     </div>
@@ -35,6 +42,8 @@
   </script>
 
   <div id="result"></div>
+</div>
+
 
   <script>
     function signInCallback(authResult) {
