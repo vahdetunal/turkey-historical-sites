@@ -27,6 +27,9 @@ CLIENT_ID = json.loads(
             open('client_secrets.json', 'r').read())['web']['client_id']
 
 
+# Three helper functions all include a session.close(). Without closing
+# sessions, logging in or out of the website usually resulted in sqlalchemy
+# thread errors although flask_sqlalchemy should be thread safe.
 
 # Add a new user to database and return the users id
 def create_user(login_session):
@@ -36,18 +39,21 @@ def create_user(login_session):
     session.add(new_user)
     session.commit()
     user = session.query(User).filter_by(email=login_session['email']).one()
+    session.close()
     return user.id
 
 
 # Returns a user given the user id
 def get_user_info(id):
     user = session.query(User).filter_by(id=id).one()
+    session.close()
     return user
 
 
 def get_user_id(email):
     try:
         user = session.query(User).filter_by(email=email).one()
+        session.close()
         return user.id
     except:
         return None
