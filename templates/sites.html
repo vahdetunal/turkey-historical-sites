@@ -17,10 +17,12 @@
           <a class="item-link" href="{{url_for('show_historical_site', city_id=city.id, site_id=site.id)}}">
             <h2 class="item-title">{{site.name}}</h2>
           </a>
+          {% if user_id == site.user_id %}
           <div class="menu-link-container">
               <a class="menu-link" href="{{url_for('edit_historical_site', city_id=city.id, site_id=site.id)}}">Edit</a>
               <a class="menu-link" href="{{url_for('delete_historical_site', city_id=city.id, site_id=site.id)}}">Delete</a>
           </div>
+          {% endif %}
         </div>
         <img class="item-image" src="{{site.image}}" alt="Image for {{site.name}}">
       </div>

@@ -16,10 +16,12 @@
             <a class="item-link" href="{{url_for('show_sites', city_id = city.id)}}">
                   <h2 class="item-title">{{city.name}}</h2>
             </a>
+            {% if user_id == city.user_id %}
             <div class="menu-link-container">
-                <a class="menu-link" href="{{url_for('edit_city', city_id=city.id)}}">Edit</a>
-                <a class="menu-link" href="{{url_for('delete_city', city_id=city.id)}}">Delete</a>
+              <a class="menu-link" href="{{url_for('edit_city', city_id=city.id)}}">Edit</a>
+              <a class="menu-link" href="{{url_for('delete_city', city_id=city.id)}}">Delete</a>
             </div>
+            {% endif %}
           </div>
           <img class="item-image" src="{{city.image}}" alt="Image for {{city.name}}">
         </div>
