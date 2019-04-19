@@ -3,6 +3,7 @@
 {% block content %}
 <div class="content-container">
   <div class="page-title-container">
+    <a class="title-link back-link" href="{{url_for('show_cities')}}">Back</a>
     <h1 class="page-title">Edit {{city.name}}</h1>
   </div>
   <form method="POST">

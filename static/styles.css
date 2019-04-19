@@ -152,3 +152,8 @@ body {
 .delete-confirmation {
     text-align: center;
 }
+
+.back-link {
+    margin-right: 0;
+    margin-left: 1rem;
+}

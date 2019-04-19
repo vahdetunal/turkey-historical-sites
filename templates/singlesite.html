@@ -3,7 +3,11 @@
 {% block content %}
 <div class="content-container">
   <div class="page-title-container">
-      <h1 class="page-title">{{site.name}}</h1>
+    <a class="title-link back-link"
+      href="{{url_for('show_sites', city_id=site.city_id)}}">
+      Back
+    </a>
+    <h1 class="page-title">{{site.name}}</h1>
   </div>
   <div class="single-site-container">
     <div class="description-container">
