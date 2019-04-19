@@ -157,3 +157,10 @@ body {
     margin-right: 0;
     margin-left: 1rem;
 }
+
+.flash {
+    margin: 5rem 15%;
+    border-style: solid;
+    border-width: 0.2rem;
+    background: #ccbf49;
+}
