@@ -147,3 +147,7 @@ body {
 .description-container {
     flex-grow: 1;
 }
+
+.delete-confirmation {
+    text-align: center;
+}
