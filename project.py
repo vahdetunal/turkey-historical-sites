@@ -53,7 +53,12 @@ def get_user_id(email):
     except:
         return None
 
-
+def get_session_user(login_session):
+    try:
+        return login_session['user_id']
+    except:
+        return None
+    
 
 # Create and store a state token to prevent cross site request forgery attacks.
 def generate_state_token():
@@ -210,9 +215,10 @@ def show_cities():
     # Get cities from the database
     cities = session.query(City).order_by(City.name)
     username = login_session.get('username', '')
-    return render_template('cities.html',
-                            cities=cities,
-                            username=username)
+    # Pass id to hide links from unauthorized or unauthenticated users
+    user_id = get_session_user(login_session)
+    return render_template('cities.html', cities=cities,
+                            username=username, user_id=user_id)
 
 
 # Show historical sites within a city
@@ -220,7 +226,10 @@ def show_cities():
 def show_sites(city_id):
     city = session.query(City).filter_by(id=city_id).one()
     sites = session.query(Site).filter_by(city_id=city_id)
-    return render_template('sites.html', city=city, sites=sites)
+    # Pass id to hide links from unauthorized or unauthenticated users
+    user_id = get_session_user(login_session)
+    return render_template('sites.html', city=city, 
+                            sites=sites, user_id=user_id)
 
 
 # Show a historical site

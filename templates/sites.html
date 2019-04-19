@@ -5,7 +5,9 @@
   <div class="page-title-container">
     <a class="title-link back-link" href="{{url_for('show_cities')}}">Back</a>
     <h1 class="page-title">Historical Sites of {{city.name}}</h1>
+    {% if user_id is not none %}
     <a class="title-link" href="{{url_for('new_historical_site', city_id=city.id)}}">New Site</a>
+    {% endif %}
   </div>
   <ul class="navigation-container">
     {% for site in sites %}
