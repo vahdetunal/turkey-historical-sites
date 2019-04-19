@@ -8,33 +8,6 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 
-class User(Base):
-    __tablename__ = 'user'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
-    email = Column(String(250), nullable=False)
-    picture = Column(String(250))
-
-
-class City(Base):
-    __tablename__ = 'city'
-
-    name = Column(String(250), nullable=False)
-    id = Column(Integer, primary_key=True)
-    image = Column(String(250))
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
-
-    @property
-    def serialize(self):
-        """Return object data in easily serializeable format"""
-        return {
-            'name': self.name,
-            'id': self.id
-        }
-
-
 class Site(Base):
     __tablename__ = 'site'
 
@@ -44,9 +17,7 @@ class Site(Base):
     civilization = Column(String(250))
     image = Column(String(250))
     city_id = Column(Integer, ForeignKey('city.id'))
-    city = relationship(City)
     user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
 
     @property
     def serialize(self):
@@ -57,6 +28,35 @@ class Site(Base):
             'description': self.description,
             'civilization': self.civilization
         }
+
+
+class City(Base):
+    __tablename__ = 'city'
+
+    name = Column(String(250), nullable=False)
+    id = Column(Integer, primary_key=True)
+    image = Column(String(250))
+    user_id = Column(Integer, ForeignKey('user.id'))
+    site = relationship(Site, cascade='delete')
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'id': self.id
+        }
+
+
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+    picture = Column(String(250))
+    city = relationship(City)
+    site = relationship(Site)
 
 
 engine = create_engine("sqlite:///historicalsites.db")

@@ -337,10 +337,6 @@ def delete_city(city_id):
     if request.method == 'POST':
         # A city may not have any site entries. Those cases need to be
         # handled to prevent errors.
-        try:
-            session.query(Site).filter_by(city_id=city_id).delete()
-        except BaseException:
-            session.rollback()
         session.delete(city)
         session.commit()
         flash('City {} deleted!'.format(city.name))
