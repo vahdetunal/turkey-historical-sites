@@ -12,7 +12,8 @@ from oauth2client.client import FlowExchangeError
 import httplib2
 import json
 import requests
-import random, string
+import random
+import string
 
 
 app = Flask(__name__)
@@ -32,13 +33,14 @@ CLIENT_ID = json.loads(
 
 # Three helper functions all include a session.close(). Without closing
 # sessions, logging in or out of the website usually resulted in sqlalchemy
-# thread errors although flask_sqlalchemy should be thread safe.
+# thread errors although flask_sqlalchemy should be thread safe. Logging out
+# still causes thread errors sometimes. I could not figure out the reason.
 
 # Add a new user to database and return the users id
 def create_user(login_session):
     new_user = User(name=login_session['username'],
-                email=login_session['email'],
-                picture=login_session['picture'])
+                    email=login_session['email'],
+                    picture=login_session['picture'])
     session.add(new_user)
     session.commit()
     user = session.query(User).filter_by(email=login_session['email']).one()
@@ -58,15 +60,16 @@ def get_user_id(email):
         user = session.query(User).filter_by(email=email).one()
         session.close()
         return user.id
-    except:
+    except BaseException:
         return None
+
 
 def get_session_user(login_session):
     try:
         return login_session['user_id']
-    except:
+    except BaseException:
         return None
-    
+
 
 # Create and store a state token to prevent cross site request forgery attacks.
 def generate_state_token():
@@ -139,7 +142,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_google_id = login_session.get('google_id')
     if stored_access_token is not None and google_id == stored_google_id:
-        response = make_response(json.dumps('Current user is already connected.'),
+        response = make_response(json.dumps(
+                                 'Current user is already connected.'),
                                  200)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -175,7 +179,9 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += (' " style = "width: 300px; height: 300px;' +
+               'border-radius: 150px;-webkit-border-radius: 150px;' +
+               '-moz-border-radius: 150px;"> ')
     flash("you are now logged in as %s" % login_session['username'])
     print("done!")
     return output
@@ -188,7 +194,8 @@ def gdisconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
         print('Access Token is None')
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        response = make_response(json.dumps('Current user not connected.'),
+                                 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     print('In gdisconnect access token is {}'.format(access_token))
@@ -214,7 +221,9 @@ def gdisconnect():
         return response
     else:
         # If token could not be revoked, inform the user
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(json.dumps(
+                                 'Failed to revoke token for given user.',
+                                 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -228,7 +237,7 @@ def show_cities():
     # Pass id to hide links from unauthorized or unauthenticated users
     user_id = get_session_user(login_session)
     return render_template('cities.html', cities=cities,
-                            username=username, user_id=user_id)
+                           username=username, user_id=user_id)
 
 
 # Show historical sites within a city
@@ -238,8 +247,8 @@ def show_sites(city_id):
     sites = session.query(Site).filter_by(city_id=city_id)
     # Pass id to hide links from unauthorized or unauthenticated users
     user_id = get_session_user(login_session)
-    return render_template('sites.html', city=city, 
-                            sites=sites, user_id=user_id)
+    return render_template('sites.html', city=city,
+                           sites=sites, user_id=user_id)
 
 
 # Show a historical site
@@ -258,7 +267,7 @@ def new_city():
         return redirect('/login')
 
     user_id = get_user_id(login_session['email'])
-        
+
     if request.method == 'POST':
         city = City(name=request.form['name'],
                     image=request.form['image_uri'],
@@ -322,7 +331,7 @@ def delete_city(city_id):
         # handled to prevent errors.
         try:
             session.query(Site).filter_by(city_id=city_id).delete()
-        except:
+        except BaseException:
             session.rollback()
         session.delete(city)
         session.commit()
@@ -446,6 +455,9 @@ def single_site(city_id, site_id):
 
 
 if __name__ == '__main__':
-    app.secret_key = 'some_key'
+    # Read the secret key from file and close the file
+    f = open("secret_key.txt", "r")
+    app.secret_key = f.read()
+    f.close()
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
