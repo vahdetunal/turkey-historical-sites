@@ -50,12 +50,15 @@ def create_user(login_session):
 
 # Returns a user given the user id
 def get_user_info(id):
+    ''' Returns a user given the id '''
     user = session.query(User).filter_by(id=id).one()
     session.close()
     return user
 
 
 def get_user_id(email):
+    ''' Returns a users id given email. Returns none if user is not registered.
+    '''
     try:
         user = session.query(User).filter_by(email=email).one()
         session.close()
@@ -65,31 +68,32 @@ def get_user_id(email):
 
 
 def get_session_user(login_session):
+    ''' Get the id of a user connected to a session '''
     try:
         return login_session['user_id']
     except BaseException:
         return None
 
 
-# Create and store a state token to prevent cross site request forgery attacks.
 def generate_state_token():
+    ''' Creates a state token to prevent cross site forgery attacks. '''
     characters = string.ascii_uppercase + string.digits
     state = ''.join(random.choice(characters) for i in range(32))
     return state
 
 
-# Show login page, sends a state token to the user to prevent cross site
-# forgery attacks.
 @app.route('/login')
 def show_login():
+    ''' Shows the login page and sends a state token '''
     state = generate_state_token()
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
 
-# Connect the user using Google oAuth
+# ============================ Google oAuth2 =================================
 @app.route('/gconnect', methods=['POST', 'GET'])
 def gconnect():
+    ''' Connects the user using Google oAuth '''
     # State token validation against cross site forgery attacks.
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -187,9 +191,9 @@ def gconnect():
     return output
 
 
-# Disconnect from users Google account.
 @app.route('/gdisconnect')
 def gdisconnect():
+    ''' Disconnect from users Google account '''
     # Check if the user is logged in
     access_token = login_session.get('access_token')
     if access_token is None:
@@ -228,9 +232,10 @@ def gdisconnect():
         return response
 
 
-# Show all cities
+# =============================== Read pages ===============================
 @app.route('/')
 def show_cities():
+    ''' Shows the page with city list '''
     # Get cities from the database
     cities = session.query(City).order_by(City.name)
     username = login_session.get('username', '')
@@ -240,9 +245,9 @@ def show_cities():
                            username=username, user_id=user_id)
 
 
-# Show historical sites within a city
 @app.route('/<int:city_id>')
 def show_sites(city_id):
+    ''' Shows historical sites within a city '''
     city = session.query(City).filter_by(id=city_id).one()
     sites = session.query(Site).filter_by(city_id=city_id)
     # Pass id to hide links from unauthorized or unauthenticated users
@@ -251,16 +256,17 @@ def show_sites(city_id):
                            sites=sites, user_id=user_id)
 
 
-# Show a historical site
 @app.route('/<int:city_id>/<int:site_id>')
 def show_historical_site(city_id, site_id):
+    ''' Shows a historical site '''
     site = session.query(Site).filter_by(id=site_id, city_id=city_id).one()
     return render_template('singlesite.html', site=site)
 
 
-# Add a new city
+# ================ City pages that modify the DB ===========================
 @app.route('/new', methods=['GET', 'POST'])
 def new_city():
+    ''' Shows the form to add new cities and handle the add city requests '''
     # Redirect to login page if the user is not logged in.
     if 'username' not in login_session:
         flash('You need to login to add a city.')
@@ -284,6 +290,7 @@ def new_city():
 # Edit a city
 @app.route('/<int:city_id>/edit', methods=['GET', 'POST'])
 def edit_city(city_id):
+    ''' Shows the form to edit cities and handles the edit city requests '''
     city = session.query(City).filter_by(id=city_id).one()
 
     # Redirect to login page if user is not logged in.
@@ -314,9 +321,7 @@ def edit_city(city_id):
 # Delete a city
 @app.route('/<int:city_id>/delete', methods=['GET', 'POST'])
 def delete_city(city_id):
-    '''
-    Deletes a city and all site entries related.
-    '''
+    ''' Show the form to delete cities and handle the delete site requests '''
     city = session.query(City).filter_by(id=city_id).one()
 
     # Redirect to login page if user is not logged in.
@@ -344,9 +349,10 @@ def delete_city(city_id):
         return render_template('deletecity.html', city=city)
 
 
-# Add a historical site
+# ================ Site pages that modify the DB ===========================
 @app.route('/<int:city_id>/new', methods=['GET', 'POST'])
 def new_historical_site(city_id):
+    ''' Shows the form to add sites and handles the add site requests '''
     city = session.query(City).filter_by(id=city_id).one()
 
     # Redirect to login page if the user is not logged in.
@@ -374,6 +380,7 @@ def new_historical_site(city_id):
 # Edit a historical site
 @app.route('/<int:city_id>/<int:site_id>/edit', methods=['GET', 'POST'])
 def edit_historical_site(city_id, site_id):
+    ''' Shows the form to edit new sites and handles the edit site requests '''
     site = session.query(Site).filter_by(id=site_id, city_id=city_id).one()
 
     # Redirect to main page if the user is not logged in.
@@ -404,6 +411,7 @@ def edit_historical_site(city_id, site_id):
 # Delete a historical site
 @app.route('/<int:city_id>/<int:site_id>/delete', methods=['GET', 'POST'])
 def delete_historical_site(city_id, site_id):
+    ''' Show the form to delete sites and handles the delete site requests '''
     site = session.query(Site).filter_by(id=site_id, city_id=city_id).one()
 
     # Redirect to main page if the user is not logged in.
@@ -425,6 +433,7 @@ def delete_historical_site(city_id, site_id):
         return render_template('deletesite.html', site=site)
 
 
+# ============================ Form validation ==============================
 def validate_new_city(city_form, user_id):
     '''Validates a city form, returns none if the form has no name field.
     Returns a City object otherwise. If no image link is included, default
@@ -489,7 +498,7 @@ def validate_new_site(site_form, user_id, city_id):
 
 
 def validate_edit_site(site, site_form):
-    '''Validates a site form, returns none if the form has no name field.
+    '''Validates an edit site form, returns none if the form has no name field.
     Returns a Site object otherwise. Other unprovided fields are filled by
     default values.
 
@@ -528,31 +537,32 @@ def site_form_defaults(site_form):
     return site_form
 
 
-# JSON api to get all cities
+# ========================== JSON api calls =================================
 @app.route('/JSON')
 @app.route('/cities/JSON')
 def cities_json():
+    ''' Returns all cities as JSON objects '''
     cities = session.query(City).all()
     return jsonify(cities=[city.serialize for city in cities])
 
 
-# JSON api to get all sites within a city
 @app.route('/<int:city_id>/JSON')
 def city_sites_json(city_id):
+    ''' Returns sites within a city as JSON objects '''
     sites = session.query(Site).filter_by(city_id=city_id).all()
     return jsonify(sites=[site.serialize for site in sites])
 
 
-# JSON api to get all sites
 @app.route('/sites/JSON')
 def sites_json():
+    ''' Returns all sites as JSON objects '''
     sites = session.query(Site).all()
     return jsonify(sites=[site.serialize for site in sites])
 
 
-# JSON api to get a single site
 @app.route('/<int:city_id>/<int:site_id>/JSON')
 def single_site(city_id, site_id):
+    ''' Returns information about a single site as a JSON object '''
     site = session.query(Site).filter_by(id=site_id, city_id=city_id).one()
     return jsonify(site=site.serialize)
 
