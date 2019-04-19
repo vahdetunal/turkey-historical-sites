@@ -11,20 +11,28 @@
   </div>
   <form method="POST">
     <p>
-      <label for="name" required>Name</label>
-      <input type="text" maxlength="50" name="name" id="name" placeholder="{{site.name}}">
+      <label for="name">Name</label>
+      <input type="text" maxlength="50" name="name" id="name"
+             placeholder="{{site.name}}" value="{{site.name}}" required>
     </p>
     <p>
         <label for="description">Description</label>
-        <textarea name="description" id="description" maxlength="250" rows="5" placeholder="{{site.description}}"></textarea>
+        <textarea name="description" id="description" maxlength="250" rows="5" 
+                  placeholder="{{site.description}}"
+                  value ="{{site.description}}">
+        </textarea>
     </p>
     <p>
         <label for="civilization">Civilization</label>
-        <input type="text" name="civilization" id="civilization" maxlength="50" placeholder="{{site.civilization}}">
+        <input type="text" name="civilization" id="civilization"
+               maxlength="50" placeholder="{{site.civilization}}"
+               value="{{site.civilization}}">
     </p>
     <p>
       <label for="image_uri">Image URI</label>
-      <input type="text" maxlength="250" name="image_uri" id="image_uri" placeholder="{{site.image}}">
+      <input type="text" maxlength="250" name="image_uri"
+             id="image_uri" placeholder="{{site.image}}"
+             value="{{site.image}}">
     </p>
     <button type="submit">Edit</button>
   </form>
