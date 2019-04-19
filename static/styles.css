@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+    font: 1rem arial, sans-serif;
+}
+.site-header {
+    display: flex;
+    align-items: center;
+    background: #e30a17;
+    padding: 1rem;
+}
+
+.header-text {
+    color: white;
+    font-size: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: bold;
+}
+
+.signin-button {
+    display: flex;
+    align-items: center;
+    border-color: white;
+    border-style: double;
+    border-width: 0.2rem;
+    border-radius: 0.5rem;
+}
+
+.signin-link {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0.5rem 1rem;
+    color: white;
+    text-decoration: none;
+}
+
+.signin-button:hover {
+    background: #b60713;
+}
+
+.profile-name {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 200;
+    padding: 0.5rem 1rem;
+}
