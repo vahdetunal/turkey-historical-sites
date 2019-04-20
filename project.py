@@ -22,7 +22,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Create a DB session
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres+psycopg2://postgres:postgres@localhost:5432/historicalsights2'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:postgres@localhost:5432/historicalsights2'
 db = SQLAlchemy(app)
 session = db.session()
 
@@ -569,4 +569,4 @@ if __name__ == '__main__':
     app.secret_key = f.read()
     f.close()
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=80)
