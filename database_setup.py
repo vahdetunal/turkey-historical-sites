@@ -59,6 +59,6 @@ class User(Base):
     site = relationship(Site)
 
 
-engine = create_engine("sqlite:///historicalsites.db")
+engine = create_engine("postgres+psycopg2://postgres:postgres@localhost:5432/historicalsights2")
 
 Base.metadata.create_all(engine)

@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import City, Base, Site, User
 
 
-engine = create_engine('sqlite:///historicalsites.db')
+engine = create_engine("postgres://postgres:postgres@localhost:5432/historicalsights2")
 Session = sessionmaker(bind=engine)
 session = Session()
 
