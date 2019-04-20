@@ -59,6 +59,7 @@ class User(Base):
     site = relationship(Site)
 
 
-engine = create_engine("postgres+psycopg2://postgres:postgres@localhost:5432/historicalsights2")
+engine = create_engine('postgres://catalog:catalog' +
+                       '@localhost:5432/historicalsites')
 
 Base.metadata.create_all(engine)

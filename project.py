@@ -22,7 +22,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Create a DB session
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:postgres@localhost:5432/historicalsights2'
+app.config['SQLALCHEMY_DATABASE_URI'] = ('postgres://catalog:catalog' +
+                                         '@localhost:5432/historicalsites')
 db = SQLAlchemy(app)
 session = db.session()
 
